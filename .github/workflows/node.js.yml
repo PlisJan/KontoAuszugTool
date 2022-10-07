@@ -1,0 +1,66 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    tags: [ 'v*.*.*' ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'yarn'
+    - run: yarn install
+    - run: yarn add pkg
+    - run: tsc app.ts
+    - run: pkg -t node16-win-x64 -o KontoAuszugTool.exe app.js
+    - run: pkg -t node16-macos-x64 -o KontoAuszugTool_Mac app.js 
+    - run: pkg -t node16-linux-x64 -o KontoAuszugTool_Linux app.js 
+    
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: false
+        release_name: KontoAuszugTool_${{ github.ref_name }}
+        tag_name: ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    
+    - name: Upload Windows File
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./KontoAuszugTool.exe
+        asset_name: KontoAuszugTool.exe
+
+    - name: Upload Mac File
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./KontoAuszugTool_Mac
+        asset_name: KontoAuszugTool_Mac
+
+    - name: Upload Linux File
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./KontoAuszugTool_Linux
+        asset_name: KontoAuszugTool_Linux
