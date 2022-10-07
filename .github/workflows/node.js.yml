@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
+    tags: '*'
 
 jobs:
   build:
