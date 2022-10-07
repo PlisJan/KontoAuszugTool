@@ -1,0 +1,19 @@
+{
+    "name": "kontoauszuege",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.ts",
+    "dependencies": {
+        "@types/node": "^16.11.6",
+        "csv-parser": "^3.0.0",
+        "excel4node": "^1.7.2",
+        "moment": "^2.29.4",
+        "typescript": "^4.4.3"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
+}
