@@ -44,6 +44,7 @@ jobs:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./KontoAuszugTool.exe
                   asset_name: KontoAuszugTool.exe
+                  asset_content_type: application/x-msdownload
 
             - name: Upload Mac File
               uses: actions/upload-release-asset@v1
@@ -53,6 +54,7 @@ jobs:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./KontoAuszugTool_Mac
                   asset_name: KontoAuszugTool_Mac
+                  asset_content_type: application/octet-stream
 
             - name: Upload Linux File
               uses: actions/upload-release-asset@v1
@@ -62,3 +64,4 @@ jobs:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
                   asset_path: ./KontoAuszugTool_Linux
                   asset_name: KontoAuszugTool_Linux
+                  asset_content_type: application/x-elf
