@@ -4,63 +4,61 @@
 name: Node.js CI
 
 on:
-  push:
-    tags: '*'
+    push:
+        tags: "*"
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.x
+                  cache: "yarn"
+            - run: yarn install
+            - run: yarn add pkg
+            - run: tsc app.ts
+            - run: yarn run buildWindows
+            - run: yarn run buildMac
+            - run: yarn run buildLinux
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16.x
-        cache: 'yarn'
-    - run: yarn install
-    - run: yarn add pkg
-    - run: tsc app.ts
-    - run: pkg -t node16-win-x64 -o KontoAuszugTool.exe app.js
-    - run: pkg -t node16-macos-x64 -o KontoAuszugTool_Mac app.js 
-    - run: pkg -t node16-linux-x64 -o KontoAuszugTool_Linux app.js 
-    
-    
-    - name: Create Release
-      uses: actions/create-release@v1
-      id: create_release
-      with:
-        draft: false
-        prerelease: false
-        release_name: KontoAuszugTool_${{ github.ref_name }}
-        tag_name: ${{ github.ref }}
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-    
-    - name: Upload Windows File
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./KontoAuszugTool.exe
-        asset_name: KontoAuszugTool.exe
+            - name: Create Release
+              uses: actions/create-release@v1
+              id: create_release
+              with:
+                  draft: false
+                  prerelease: false
+                  release_name: KontoAuszugTool_${{ github.ref_name }}
+                  tag_name: ${{ github.ref }}
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
 
-    - name: Upload Mac File
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./KontoAuszugTool_Mac
-        asset_name: KontoAuszugTool_Mac
+            - name: Upload Windows File
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./KontoAuszugTool.exe
+                  asset_name: KontoAuszugTool.exe
 
-    - name: Upload Linux File
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./KontoAuszugTool_Linux
-        asset_name: KontoAuszugTool_Linux
+            - name: Upload Mac File
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./KontoAuszugTool_Mac
+                  asset_name: KontoAuszugTool_Mac
+
+            - name: Upload Linux File
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ github.token }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./KontoAuszugTool_Linux
+                  asset_name: KontoAuszugTool_Linux

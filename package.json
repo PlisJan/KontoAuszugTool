@@ -1,5 +1,5 @@
 {
-    "name": "kontoauszuege",
+    "name": "konto_auszug_tool",
     "version": "1.0.0",
     "description": "",
     "main": "app.ts",
@@ -12,8 +12,9 @@
     },
     "devDependencies": {},
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "buildWindows": "pkg -t node16-win-x64 -o KontoAuszugTool.exe app.js",
+        "buildMac": "pkg -t node16-macos-x64 -o KontoAuszugTool_Mac app.js",
+        "buildLinux": "pkg -t node16-linux-x64 -o KontoAuszugTool_Linux app.js "
     },
-    "author": "",
-    "license": "ISC"
+    "author": "Jan Plischke"
 }
