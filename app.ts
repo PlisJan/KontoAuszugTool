@@ -3,6 +3,7 @@ const fs = require("fs");
 import * as Regexpr from "./Regexp";
 import { convertToExcel } from "./ExcelHelper";
 import moment = require("moment");
+import { writeFileSync } from "fs";
 const results = [];
 
 function exec2(exp: RegExp, str: string): [string, string | null] {
@@ -25,6 +26,7 @@ fs.readdirSync("CSV_Files").forEach((file) => {
     processCSV("./CSV_Files/" + file).then((processedTransactions) => {
         jsonData = jsonData.concat(processedTransactions);
         convertToExcel(jsonData, "Excel.xlsx");
+        // writeFileSync("res.json", JSON.stringify(jsonData));
         console.log("Finished conversion of " + "./CSV_Files/" + file);
     });
 });
@@ -34,8 +36,14 @@ async function processCSV(filename: string) {
         .createReadStream(filename)
         .pipe(csv({ separator: ";" }));
     dataStream.on("data", (data) => {
-        data.Betrag = parseFloat(data.Betrag);
-        data["Saldo danach"] = parseFloat(data["Saldo danach"]);
+        data.Betrag = parseFloat(
+            (data.Betrag as string).replace(".", "").replace(",", ".")
+        );
+        data["Saldo nach Buchung"] = parseFloat(
+            (data["Saldo nach Buchung"] as string)
+                .replace(".", "")
+                .replace(",", ".")
+        );
 
         data.AuszugNr = moment(data.Valutadatum, "DD.MM.YYYY").month() + 1;
 
