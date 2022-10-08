@@ -25,7 +25,7 @@ fs.readdirSync("CSV_Files").forEach((file) => {
     console.log("Starting conversion of " + "./CSV_Files/" + file);
     processCSV("./CSV_Files/" + file).then((processedTransactions) => {
         jsonData = jsonData.concat(processedTransactions);
-        convertToExcel(jsonData, "Excel.xlsx");
+        convertToExcel(processedTransactions, "Excel.xlsx");
         // writeFileSync("res.json", JSON.stringify(jsonData));
         console.log("Finished conversion of " + "./CSV_Files/" + file);
     });
